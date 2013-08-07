@@ -48,18 +48,41 @@ public class Player extends Mob {
 	public void render(Screen screen) {
 		int xTile = 0;
 		int yTile = 28;
+		
+		/*
+		 * for walkingSpeed
+		 * Higher = slower, 
+		 * 4 = normal
+		 * 6 = gliding
+		 * 3 = speed walking
+		 */
+		
+		int walkingSpeed = 4;
+		int flipTop = (numSteps >> walkingSpeed) & 1;
+		int flipBottom = (numSteps >> walkingSpeed) & 1;
+
+		if (movingDir == 1) {
+			xTile += 2;
+		} else
+			if (movingDir > 1) {
+				xTile += 4 + ((numSteps >> walkingSpeed) & 1) * 2;
+				flipTop = (movingDir - 1) % 2;
+			}
 
 		int modifier = 8 * scale;
 		int xOffset = x - modifier / 2;
 		int yOffset = y - modifier / 2 - 4;
 
 		// Upper Body rendering
-		screen.render(xOffset, yOffset, xTile + yTile * 32, colour, 0x00, scale);
-		screen.render(xOffset + modifier, yOffset, (xTile + 1) + yTile * 32, colour, 0x00, scale);
+		screen.render(xOffset + (modifier * flipTop), yOffset, xTile + yTile * 32, colour, flipTop, scale);
+		screen.render(xOffset + modifier - (modifier * flipTop), yOffset, (xTile + 1) + yTile * 32, colour, flipTop,
+				scale);
 
 		// Lower Body rendering
-		screen.render(xOffset, yOffset + modifier, xTile + (yTile + 1) * 32, colour, 0x00, scale);
-		screen.render(xOffset + modifier, yOffset + modifier, (xTile + 1) + (yTile + 1) * 32, colour, 0x00, scale);
+		screen.render(xOffset + (modifier * flipBottom), yOffset + modifier, xTile + (yTile + 1) * 32, colour,
+				flipBottom, scale);
+		screen.render(xOffset + modifier - (modifier * flipBottom), yOffset + modifier, (xTile + 1) + (yTile + 1) * 32,
+				colour, flipBottom, scale);
 	}
 
 	public boolean hasCollided(int xa, int ya) {

@@ -11,8 +11,6 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import com.rosenthal.retrogame.entities.Player;
-import com.rosenthal.retrogame.graphics.Colours;
-import com.rosenthal.retrogame.graphics.Font;
 import com.rosenthal.retrogame.graphics.Screen;
 import com.rosenthal.retrogame.graphics.SpriteSheet;
 import com.rosenthal.retrogame.level.Level;
@@ -103,11 +101,6 @@ public class Game extends Canvas implements Runnable {
 				delta--;
 				shouldRender = true;
 			}
-
-			/*
-			 * try { Thread.sleep(2); } catch (InterruptedException e) {
-			 * e.printStackTrace(); }
-			 */
 
 			if (shouldRender) {
 				frames++;
