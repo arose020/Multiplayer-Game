@@ -139,16 +139,6 @@ public class Game extends Canvas implements Runnable {
 		int yOffset = player.y - (screen.height / 2);
 
 		level.renderTile(screen, xOffset, yOffset);
-
-		for (int x = 0; x < level.width; x++) {
-			int colour = Colours.get(-1, -1, -1, 000);
-			if (x % 10 == 0 && x != 0) {
-				colour = Colours.get(-1, -1, -1, 500);
-			}
-
-			Font.render((x % 10) + "", screen, 0 + (x * 8), 0, colour);
-
-		}
 		
 		level.renderEntities(screen);
 
