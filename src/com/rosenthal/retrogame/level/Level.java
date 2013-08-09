@@ -1,7 +1,12 @@
 package com.rosenthal.retrogame.level;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import com.rosenthal.retrogame.entities.Entity;
 import com.rosenthal.retrogame.graphics.Screen;
@@ -13,14 +18,62 @@ public class Level {
 	public int width;
 	public int height;
 	public List<Entity> entities = new ArrayList<Entity>();
+	private String imagePath;
+	private BufferedImage image;
 
-	public Level(int width, int height) {
-		tiles = new byte[width * height];
-		this.width = width;
-		this.height = height;
-		this.generateLevel();
+	public Level(String imagePath) {
+		if (imagePath != null) {
+			this.imagePath = imagePath;
+			this.loadLevelFromFile();
+		} else {
+			System.out.println("ERROR LOADING LEVEL FILE, GENERATING LOCAL RESOURCES...");
+			tiles = new byte[width * height];
+			this.width = 64;
+			this.height = 64;
+			this.generateLevel();
+		}
 	}
 
+	private void loadLevelFromFile() {
+		try {
+			this.image = ImageIO.read(Level.class.getResource(this.imagePath));
+			this.width = image.getWidth();
+			this.height = image.getHeight();
+			tiles = new byte[width * height];
+			this.loadTiles();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void loadTiles() {
+		// parse line
+		int[] tileColours = this.image.getRGB(0, 0, width, height, null, 0, width);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				tileCheck: for (Tile t : Tile.tiles) {
+					if (t != null && t.getLevelColour() == tileColours[x + y * width]) {
+						this.tiles[x + y * width] = t.getId();
+						break tileCheck;
+					}
+				}
+			}
+		}
+	}
+
+	private void saveLevelToFile() {
+		try {
+			ImageIO.write(image, "png", new File(Level.class.getResource(this.imagePath).getFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void alterTile(int x, int y, Tile newTile) {
+		this.tiles[x + y * width] = newTile.getId();
+		image.setRGB(x, y, newTile.getLevelColour());
+	}
+	
 	public void generateLevel() {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
