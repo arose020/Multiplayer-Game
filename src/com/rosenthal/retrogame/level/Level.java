@@ -61,6 +61,7 @@ public class Level {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void saveLevelToFile() {
 		try {
 			ImageIO.write(image, "png", new File(Level.class.getResource(this.imagePath).getFile()));
@@ -73,7 +74,7 @@ public class Level {
 		this.tiles[x + y * width] = newTile.getId();
 		image.setRGB(x, y, newTile.getLevelColour());
 	}
-	
+
 	public void generateLevel() {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -89,7 +90,13 @@ public class Level {
 	public void tick() {
 		for (Entity e : entities) {
 			e.tick();
+		}
 
+		for (Tile t : Tile.tiles) {
+			if (t == null) {
+				break;
+			}
+			t.tick();
 		}
 	}
 
