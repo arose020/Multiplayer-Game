@@ -2,6 +2,7 @@ package com.rosenthal.retrogame.entities;
 
 import com.rosenthal.retrogame.InputHandler;
 import com.rosenthal.retrogame.graphics.Colours;
+import com.rosenthal.retrogame.graphics.Font;
 import com.rosenthal.retrogame.graphics.Screen;
 import com.rosenthal.retrogame.level.Level;
 
@@ -11,12 +12,13 @@ public class Player extends Mob {
 	private int colour = Colours.get(-1, 111, 500, 543);
 	private int scale = 1;
 	protected boolean isSwimming = false;
-
 	private int tickCount;
+	private String username;
 
-	public Player(Level level, int x, int y, InputHandler input) {
+	public Player(Level level, int x, int y, InputHandler input, String username) {
 		super(level, "Player", x, y, 1);
 		this.input = input;
+		this.username = username;
 	}
 
 	public void tick() {
@@ -111,6 +113,11 @@ public class Player extends Mob {
 					flipBottom, scale);
 			screen.render(xOffset + modifier - (modifier * flipBottom), yOffset + modifier, (xTile + 1) + (yTile + 1)
 					* 32, colour, flipBottom, scale);
+		}
+
+		if (username != null) {
+			Font.render(username, screen, xOffset - ((username.length() - 1) / 2 * 8), yOffset - 10, Colours.get(-1,
+					-1, -1, 555), 1);
 		}
 	}
 

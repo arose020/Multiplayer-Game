@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.rosenthal.retrogame.entities.Player;
 import com.rosenthal.retrogame.graphics.Screen;
@@ -68,7 +69,7 @@ public class Game extends Canvas implements Runnable {
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/sprite_sheet.png"));
 		input = new InputHandler(this);
 		level = new Level("/levels/watter_world.png");
-		player = new Player(level, 0, 0, input);
+		player = new Player(level, 0, 0, input, JOptionPane.showInputDialog(this, "Please Enter A Username!"));
 		level.addEntity(player);
 	}
 
