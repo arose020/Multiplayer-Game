@@ -10,11 +10,14 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.rosenthal.retrogame.entities.Player;
 import com.rosenthal.retrogame.graphics.Screen;
 import com.rosenthal.retrogame.graphics.SpriteSheet;
 import com.rosenthal.retrogame.level.Level;
+import com.rosenthal.retrogame.net.GameClient;
+import com.rosenthal.retrogame.net.GameServer;
 
 public class Game extends Canvas implements Runnable {
 
@@ -38,6 +41,9 @@ public class Game extends Canvas implements Runnable {
 	public Level level;
 	public Player player;
 
+	private GameClient socketClient;
+	private GameServer socketServer;
+	
 	public Game() {
 		setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -71,11 +77,20 @@ public class Game extends Canvas implements Runnable {
 		level = new Level("/levels/watter_world.png");
 		player = new Player(level, 0, 0, input, JOptionPane.showInputDialog(this, "Please Enter A Username!"));
 		level.addEntity(player);
+		socketClient.sendData("ping".getBytes());
 	}
 
 	public synchronized void start() {
-		new Thread(this).start();
 		running = true;
+		new Thread(this).start();
+		
+		if (JOptionPane.showConfirmDialog(this, "Do you want to run the server?") == 0) {
+			socketServer = new GameServer(this);
+			socketServer.start();
+		}
+		
+		socketClient = new GameClient(this, "localhost");
+		socketClient.start();
 	}
 
 	public synchronized void stop() {
