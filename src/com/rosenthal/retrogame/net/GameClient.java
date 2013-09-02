@@ -37,7 +37,7 @@ public class GameClient extends Thread {
 				e.printStackTrace();
 			}
 			String msg = new String(packet.getData());
-			System.out.println("SERVER OUTPUT >>> " + msg);
+			System.out.println("SERVER >>> " + msg);
 		}
 	}
 	

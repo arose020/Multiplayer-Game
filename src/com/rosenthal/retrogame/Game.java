@@ -10,7 +10,6 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import com.rosenthal.retrogame.entities.Player;
 import com.rosenthal.retrogame.graphics.Screen;
@@ -18,6 +17,7 @@ import com.rosenthal.retrogame.graphics.SpriteSheet;
 import com.rosenthal.retrogame.level.Level;
 import com.rosenthal.retrogame.net.GameClient;
 import com.rosenthal.retrogame.net.GameServer;
+import com.rosenthal.retrogame.net.packets.Packet00Login;
 
 public class Game extends Canvas implements Runnable {
 
@@ -75,9 +75,8 @@ public class Game extends Canvas implements Runnable {
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/sprite_sheet.png"));
 		input = new InputHandler(this);
 		level = new Level("/levels/watter_world.png");
-		player = new Player(level, 0, 0, input, JOptionPane.showInputDialog(this, "Please Enter A Username!"));
-		level.addEntity(player);
-		socketClient.sendData("ping".getBytes());
+		Packet00Login loginPacket = new Packet00Login(JOptionPane.showInputDialog(this, "Please Enter A Username!"));
+		loginPacket.writeData(socketClient);
 	}
 
 	public synchronized void start() {
