@@ -24,21 +24,22 @@ public class Player extends Mob {
 	public void tick() {
 		int xa = 0;
 		int ya = 0;
+		if (input != null) {
+			if (input.up.isPressed()) {
+				ya--;
+			}
 
-		if (input.up.isPressed()) {
-			ya--;
-		}
+			if (input.down.isPressed()) {
+				ya++;
+			}
 
-		if (input.down.isPressed()) {
-			ya++;
-		}
+			if (input.left.isPressed()) {
+				xa--;
+			}
 
-		if (input.left.isPressed()) {
-			xa--;
-		}
-
-		if (input.right.isPressed()) {
-			xa++;
+			if (input.right.isPressed()) {
+				xa++;
+			}
 		}
 
 		if (xa != 0 || ya != 0) {
@@ -146,8 +147,11 @@ public class Player extends Mob {
 				return true;
 			}
 		}
-
 		return false;
+	}
+
+	public String getUsername() {
+		return this.username;
 	}
 
 }
