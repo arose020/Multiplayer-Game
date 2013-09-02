@@ -86,8 +86,13 @@ public class GameServer extends Thread {
 				}
 				alreadyConnected = true;
 			} else {
+				//relay to the current connected player that there is a new
+				//player
 				sendData(packet.getData(), p.ipAddress, p.port);
-				packet = new Packet00Login(p.getUsername());
+				
+				//relay to the new player that the currently connected
+				//player exists
+				packet = new Packet00Login(p.getUsername(), p.x, p.y);
 				sendData(packet.getData(), player.ipAddress, player.port);
 			}
 		}

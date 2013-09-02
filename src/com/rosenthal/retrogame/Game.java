@@ -83,7 +83,7 @@ public class Game extends Canvas implements Runnable {
 		level = new Level("/levels/watter_world.png");
 		player = new PlayerMP(level, 100, 100, input, JOptionPane.showInputDialog(this, "Please Enter A Username!"),
 				null, -1);
-		Packet00Login loginPacket = new Packet00Login(player.getUsername());
+		Packet00Login loginPacket = new Packet00Login(player.getUsername(), player.x, player.y);
 		level.addEntity(player);
 		if (socketServer != null) {
 			socketServer.addConnection((PlayerMP) player, loginPacket);
