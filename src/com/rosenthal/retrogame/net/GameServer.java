@@ -13,6 +13,7 @@ import com.rosenthal.retrogame.entities.PlayerMP;
 import com.rosenthal.retrogame.net.packets.Packet;
 import com.rosenthal.retrogame.net.packets.Packet00Login;
 import com.rosenthal.retrogame.net.packets.Packet.PacketTypes;
+import com.rosenthal.retrogame.net.packets.Packet01Disconnect;
 
 public class GameServer extends Thread {
 
@@ -58,9 +59,15 @@ public class GameServer extends Thread {
 			this.addConnection(player, (Packet00Login) packet);
 			break;
 		case DISCONNECT:
+			packet = new Packet01Disconnect(data);
+			System.out.println("[" + address.getHostAddress() + ":" + port + "]" + ((Packet01Disconnect)packet).getUsername()
+					+ " has left...");
+			this.removeConnection((Packet01Disconnect) packet);
 			break;
 		}
 	}
+
+	
 
 	public void addConnection(PlayerMP player, Packet packet) {
 		boolean alreadyConnected = false;
@@ -85,6 +92,31 @@ public class GameServer extends Thread {
 		}
 	}
 
+	private void removeConnection(Packet01Disconnect packet) {
+		this.connectedPlayers.remove(getPlayerMPIndex(packet.getUsername()));
+		packet.writeData(this);
+	}
+	
+	public PlayerMP getPlayerMP(String username) {
+		for (PlayerMP player : this.connectedPlayers) {
+			if (player.getUsername().equals(username)) {
+				return player;
+			}
+		}
+		return null;
+	}
+	
+	public int getPlayerMPIndex(String username) {
+		int index = 0;
+		for (PlayerMP player : this.connectedPlayers) {
+			if (player.getUsername().equals(username)) {
+				break;
+			}
+			index++;
+		}
+		return index;
+	}
+	
 	public void sendData(byte[] data, InetAddress ipAddress, int port) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, port);
 		try {

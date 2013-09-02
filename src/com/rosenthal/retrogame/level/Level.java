@@ -9,6 +9,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import com.rosenthal.retrogame.entities.Entity;
+import com.rosenthal.retrogame.entities.PlayerMP;
 import com.rosenthal.retrogame.graphics.Screen;
 import com.rosenthal.retrogame.level.tiles.Tile;
 
@@ -131,5 +132,16 @@ public class Level {
 
 	public void addEntity(Entity entity) {
 		this.entities.add(entity);
+	}
+
+	public void removePlayerMP(String username) {
+		int index = 0;
+		for (Entity e : entities) {
+			if (e instanceof PlayerMP && ((PlayerMP)e).getUsername().equals(username)) {
+				break;
+			}
+			index++;
+		}
+		this.entities.remove(index);
 	}
 }

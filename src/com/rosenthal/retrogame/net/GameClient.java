@@ -11,6 +11,7 @@ import com.rosenthal.retrogame.Game;
 import com.rosenthal.retrogame.entities.PlayerMP;
 import com.rosenthal.retrogame.net.packets.Packet;
 import com.rosenthal.retrogame.net.packets.Packet00Login;
+import com.rosenthal.retrogame.net.packets.Packet01Disconnect;
 import com.rosenthal.retrogame.net.packets.Packet.PacketTypes;
 
 public class GameClient extends Thread {
@@ -64,6 +65,10 @@ public class GameClient extends Thread {
 			game.level.addEntity(player);
 			break;
 		case DISCONNECT:
+			packet = new Packet01Disconnect(data);
+			System.out.println("[" + address.getHostAddress() + ":" + port + "]" + ((Packet01Disconnect)packet).getUsername()
+					+ " has left the world...");
+			game.level.removePlayerMP(((Packet01Disconnect) packet).getUsername());
 			break;
 		}
 	}
