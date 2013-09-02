@@ -14,6 +14,7 @@ import com.rosenthal.retrogame.net.packets.Packet;
 import com.rosenthal.retrogame.net.packets.Packet00Login;
 import com.rosenthal.retrogame.net.packets.Packet.PacketTypes;
 import com.rosenthal.retrogame.net.packets.Packet01Disconnect;
+import com.rosenthal.retrogame.net.packets.Packet02Move;
 
 public class GameServer extends Thread {
 
@@ -64,10 +65,13 @@ public class GameServer extends Thread {
 					+ " has left...");
 			this.removeConnection((Packet01Disconnect) packet);
 			break;
+		case MOVE: 
+			packet = new Packet02Move(data);
+			System.out.println(((Packet02Move)packet).getUsername() + " has moved to " 
+			+ ((Packet02Move)packet).getX() + "," + ((Packet02Move)packet).getY());
+			this.handleMove(((Packet02Move)packet));
 		}
 	}
-
-	
 
 	public void addConnection(PlayerMP player, Packet packet) {
 		boolean alreadyConnected = false;
@@ -76,7 +80,7 @@ public class GameServer extends Thread {
 				if (p.ipAddress == null) {
 					p.ipAddress = player.ipAddress;
 				}
-				
+
 				if (p.port == -1) {
 					p.port = player.port;
 				}
@@ -96,7 +100,7 @@ public class GameServer extends Thread {
 		this.connectedPlayers.remove(getPlayerMPIndex(packet.getUsername()));
 		packet.writeData(this);
 	}
-	
+
 	public PlayerMP getPlayerMP(String username) {
 		for (PlayerMP player : this.connectedPlayers) {
 			if (player.getUsername().equals(username)) {
@@ -105,7 +109,7 @@ public class GameServer extends Thread {
 		}
 		return null;
 	}
-	
+
 	public int getPlayerMPIndex(String username) {
 		int index = 0;
 		for (PlayerMP player : this.connectedPlayers) {
@@ -116,7 +120,7 @@ public class GameServer extends Thread {
 		}
 		return index;
 	}
-	
+
 	public void sendData(byte[] data, InetAddress ipAddress, int port) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, port);
 		try {
@@ -129,6 +133,15 @@ public class GameServer extends Thread {
 	public void sendDataToAllClients(byte[] data) {
 		for (PlayerMP p : connectedPlayers) {
 			sendData(data, p.ipAddress, p.port);
+		}
+	}
+
+	private void handleMove(Packet02Move packet) {
+		if (getPlayerMP(packet.getUsername()) != null) {
+			int index = getPlayerMPIndex(packet.getUsername());
+			this.connectedPlayers.get(index).x = packet.getX();
+			this.connectedPlayers.get(index).y = packet.getY();
+			packet.writeData(this);
 		}
 	}
 }

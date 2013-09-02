@@ -28,6 +28,7 @@ public class Game extends Canvas implements Runnable {
 	public static final int HEIGHT = WIDTH / 12 * 9;
 	public static final int SCALE = 3;
 	public static final String TITLE = "Multiplayer game";
+	public static Game game;
 
 	public JFrame frame;
 	
@@ -63,6 +64,7 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void init() {
+		game = this;
 		int index = 0;
 		for (int r = 0; r < 6; r++) {
 			for (int g = 0; g < 6; g++) {

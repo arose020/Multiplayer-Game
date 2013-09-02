@@ -1,10 +1,12 @@
 package com.rosenthal.retrogame.entities;
 
+import com.rosenthal.retrogame.Game;
 import com.rosenthal.retrogame.InputHandler;
 import com.rosenthal.retrogame.graphics.Colours;
 import com.rosenthal.retrogame.graphics.Font;
 import com.rosenthal.retrogame.graphics.Screen;
 import com.rosenthal.retrogame.level.Level;
+import com.rosenthal.retrogame.net.packets.Packet02Move;
 
 public class Player extends Mob {
 
@@ -45,6 +47,8 @@ public class Player extends Mob {
 		if (xa != 0 || ya != 0) {
 			move(xa, ya);
 			isMoving = true;
+			Packet02Move packet = new Packet02Move(this.getUsername(),this.x, this.y);
+			packet.writeData(Game.game.socketClient);
 		} else {
 			isMoving = false;
 		}

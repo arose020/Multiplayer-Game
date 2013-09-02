@@ -10,9 +10,10 @@ import java.net.UnknownHostException;
 import com.rosenthal.retrogame.Game;
 import com.rosenthal.retrogame.entities.PlayerMP;
 import com.rosenthal.retrogame.net.packets.Packet;
+import com.rosenthal.retrogame.net.packets.Packet.PacketTypes;
 import com.rosenthal.retrogame.net.packets.Packet00Login;
 import com.rosenthal.retrogame.net.packets.Packet01Disconnect;
-import com.rosenthal.retrogame.net.packets.Packet.PacketTypes;
+import com.rosenthal.retrogame.net.packets.Packet02Move;
 
 public class GameClient extends Thread {
 
@@ -70,6 +71,9 @@ public class GameClient extends Thread {
 					+ " has left the world...");
 			game.level.removePlayerMP(((Packet01Disconnect) packet).getUsername());
 			break;
+		case MOVE:
+			packet = new Packet02Move(data);
+			handleMove((Packet02Move) packet);
 		}
 	}
 	
@@ -80,5 +84,9 @@ public class GameClient extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void handleMove(Packet02Move packet) {
+		this.game.level.movePlayer(packet.getUsername(), packet.getX(), packet.getY());
 	}
 }
