@@ -102,8 +102,15 @@ public class Game extends Canvas implements Runnable {
 
 		socketClient = new GameClient(this, JOptionPane.showInputDialog(this,
 				"If yes, Whats the ip address? " +
+				"\n(ex:192.168.0.1)" +
+				"\n" +
+				"\nFor non local Lan connections" +
+				"\nGoogle \"Whats My ip?\" " +
+				"\n" +
 				"\nUse localhost for local MP" +
-				"\nClick cancel to run solo"));
+				"\n" +
+				"\nClick cancel to run solo" +
+				"\n"));
 		socketClient.start();
 	}
 
