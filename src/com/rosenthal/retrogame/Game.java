@@ -31,7 +31,7 @@ public class Game extends Canvas implements Runnable {
 	public static Game game;
 
 	public JFrame frame;
-	
+
 	public boolean running = false;
 	public int tickCount = 0;
 
@@ -100,7 +100,8 @@ public class Game extends Canvas implements Runnable {
 			socketServer.start();
 		}
 
-		socketClient = new GameClient(this, "localhost");
+		socketClient = new GameClient(this, JOptionPane.showInputDialog(this,
+				"If yes, Whats your ip address?, use localhost for local"));
 		socketClient.start();
 	}
 
